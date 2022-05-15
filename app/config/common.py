@@ -16,15 +16,15 @@ class Common(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-
         # Third party apps
         'rest_framework',            # utilities for rest apis
         'rest_framework.authtoken',  # token authentication
         'django_filters',            # for filtering rest endpoints
 
         # Your apps
-        'proxy6-middleware.users',
-
+        'app.users',
+        'app.proxy6',
+        'app.payments'
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
@@ -39,9 +39,9 @@ class Common(Configuration):
     )
 
     ALLOWED_HOSTS = ["*"]
-    ROOT_URLCONF = 'proxy6-middleware.urls'
+    ROOT_URLCONF = 'app.urls'
     SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-    WSGI_APPLICATION = 'proxy6-middleware.wsgi.application'
+    WSGI_APPLICATION = 'app.wsgi.application'
 
     # Email
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -199,3 +199,8 @@ class Common(Configuration):
             'rest_framework.authentication.TokenAuthentication',
         )
     }
+
+    PROXY6_API_KEY = os.getenv("PROXY6_API_KEY")
+    YOOMONEY_ACCESS_TOKEN = os.getenv("YOOMONEY_ACCESS_TOKEN")
+
+    PRICE_MARKUP_FACTOR = 1.2

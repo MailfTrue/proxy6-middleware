@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "proxy6-middleware.config")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.config")
     os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
     try:
