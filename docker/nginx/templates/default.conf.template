@@ -7,7 +7,7 @@ upstream frontend_upstream {
 }
 
 server {
-  listen 80 http2 default_server;
+  listen 80 default_server;
   server_name 127.0.0.1 localhost;
   charset utf-8;
   client_max_body_size 100M;
