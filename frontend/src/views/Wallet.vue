@@ -83,7 +83,7 @@ export default {
     }
   },
   mounted() {
-    apiService.get("/payments/").then((res) => this.payments = res.data)
+    apiService.get("/v1/payments/").then((res) => this.payments = res.data)
   }
 }
 </script>
