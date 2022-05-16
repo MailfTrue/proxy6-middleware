@@ -9,6 +9,7 @@ from rest_framework import status
 from django.conf import settings
 from .integrations import Proxy6Client
 from . import utils
+from ..utils import send_tg_notify
 
 proxy6_client = Proxy6Client(settings.PROXY6_API_KEY)
 
@@ -52,6 +53,8 @@ class BuyProxyAPIView(APIView):
 
         resp = proxy6_client.buy(nokey=True, descr=utils.make_user_proxy_descr(request.user),
                                  version=4, **request.query_params)
+        if resp.get("error_id", 0) == 400:
+            send_tg_notify("Недостаточно средств на proxy6.net, нужно быстро пополнить!")
         return Response(resp, status=utils.get_proxy6_http_status(resp))
 
 

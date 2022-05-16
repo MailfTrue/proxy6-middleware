@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .models import Payment
 from .serializers import PaymentSerializer
 from .integrations import Yoomoney
+from ..utils import send_tg_notify
 
 from collections import defaultdict
 
@@ -60,6 +61,7 @@ class YoomoneyHook(CreateAPIView):
             if user_id_match and request.data['unaccepted'] != 'true' and not payment.counted:
                 user_id = user_id_match['user_id']
                 if User.objects.filter(id=user_id).exists():
+                    send_tg_notify(f"Пополнение, user_id: {user_id}, amount: {request.data['amount']}")
                     User.objects.filter(id=user_id).update(balance=F('balance') + float(request.data['amount']))
                     payment.user_id = user_id
                     payment.counted = True

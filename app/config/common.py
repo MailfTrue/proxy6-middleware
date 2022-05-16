@@ -210,5 +210,7 @@ class Common(Configuration):
     PROXY6_API_KEY = os.getenv("PROXY6_API_KEY")
     YOOMONEY_ACCESS_TOKEN = os.getenv("YOOMONEY_ACCESS_TOKEN")
     YOOMONEY_WEBHOOK_SECRET = os.getenv("YOOMONEY_WEBHOOK_SECRET")
+    TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+    TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
     PRICE_MARKUP_FACTOR = 1.2
