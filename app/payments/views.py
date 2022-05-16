@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework import permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -61,8 +61,18 @@ class YoomoneyHook(CreateAPIView):
                 user_id = user_id_match['user_id']
                 if User.objects.filter(id=user_id).exists():
                     User.objects.filter(id=user_id).update(balance=F('balance') + float(request.data['amount']))
+                    payment.user_id = user_id
                     payment.counted = True
                     payment.save()
             return response
         except Exception as e:
             raise e
+
+
+class PaymentsList(ListAPIView):
+    serializer_class = PaymentSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+

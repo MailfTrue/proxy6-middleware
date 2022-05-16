@@ -20,6 +20,7 @@ class Payment(models.Model):
     unaccepted = models.BooleanField(default=False)
     raw_data = models.JSONField(null=True)
     counted = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.operation_id} {self.amount}"

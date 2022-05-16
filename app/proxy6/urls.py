@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import CountriesAPIView, GetPriceAPIView, GetCountAPIView, ListProxyAPIView
+from . import views
 
 
 urlpatterns = [
-    path("countries", CountriesAPIView.as_view()),
-    path("price", GetPriceAPIView.as_view()),
-    path("count", GetCountAPIView.as_view()),
-    path("list", ListProxyAPIView.as_view()),
+    path("countries", views.CountriesAPIView.as_view()),
+    path("price", views.GetPriceAPIView.as_view()),
+    path("count", views.GetCountAPIView.as_view()),
+    path("list", views.ListProxyAPIView.as_view()),
+    path("buy", views.BuyProxyAPIView.as_view()),
 ]
