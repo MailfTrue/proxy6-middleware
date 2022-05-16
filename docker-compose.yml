@@ -2,6 +2,8 @@ version: '3'
 services:
   postgres:
     image: postgres:11.6
+    volumes:
+      - postgres:/data/postgres
   web:
     restart: always
     env_file: .env
@@ -40,3 +42,7 @@ services:
     command: "mkdocs serve"
     volumes:
       - ./:/code
+
+volumes:
+  postgres:
+    driver: local
