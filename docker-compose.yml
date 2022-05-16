@@ -39,7 +39,9 @@ services:
       - ./docker/nginx/templates:/etc/nginx/templates
   documentation:
     restart: always
-    build: ./docker/backend/Dockerfile
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
     command: "mkdocs serve"
     volumes:
       - ./:/code
