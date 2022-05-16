@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:11.6
     volumes:
-      - postgres:/data/postgres
+      - postgres:/var/lib/postgresql/data/
   web:
     restart: always
     env_file: .env
