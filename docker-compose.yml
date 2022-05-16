@@ -33,7 +33,7 @@ services:
     ports:
       - 9080:80
     depends_on:
-      - backend
+      - web
       - frontend
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates
