@@ -23,6 +23,7 @@ class UserCreateViewSet(mixins.CreateModelMixin,
     """
     queryset = User.objects.all()
     serializer_class = CreateUserSerializer
+    authentication_classes = []
     permission_classes = (AllowAny,)
 
 
