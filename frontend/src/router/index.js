@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
+import Register from "../views/Register";
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,12 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { layout: 'auth' }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
     meta: { layout: 'auth' }
   },
   {
@@ -25,6 +32,11 @@ const routes = [
     path: '/wallet',
     name: 'Wallet',
     component: () => import("../views/Wallet")
+  },
+  {
+    path: '/api',
+    name: 'API',
+    component: () => import("../views/Api")
   }
 ]
 
@@ -33,7 +45,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login'];
+  const publicPages = ['/login', '/register'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 

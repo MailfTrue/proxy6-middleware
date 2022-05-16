@@ -41,7 +41,8 @@ class AuthService {
 
     logout() {
         localStorage.clear();
-        router.push({ name: "Login" })
+        if (router.currentRoute.name !== "Login")
+            router.push({ name: "Login" })
     }
 }
 

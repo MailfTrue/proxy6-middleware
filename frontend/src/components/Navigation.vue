@@ -23,7 +23,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Биллинг</v-list-item-title>
+          <v-list-item-title>Кошелек</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link :to="{name: 'Buy Proxy'}">
@@ -42,6 +42,15 @@
 
         <v-list-item-content>
           <v-list-item-title>Мои прокси</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link :to="{name: 'API'}">
+        <v-list-item-icon>
+          <v-icon>mdi-api</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>API</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :items="listReadable" :headers="headers">
+  <v-data-table :items="listReadable" :headers="headers" no-data-text="У вас нет прокси" >
 
   </v-data-table>
 </template>

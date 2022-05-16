@@ -18,7 +18,6 @@ class Common(Configuration):
 
         # Third party apps
         'rest_framework',            # utilities for rest apis
-        'rest_framework.authtoken',  # token authentication
         'django_filters',            # for filtering rest endpoints
         "corsheaders",
 
@@ -67,8 +66,8 @@ class Common(Configuration):
 
     # General
     APPEND_SLASH = False
-    TIME_ZONE = 'UTC'
-    LANGUAGE_CODE = 'en-us'
+    TIME_ZONE = 'Europe/Moscow'
+    LANGUAGE_CODE = 'ru'
     # If you set this to False, Django will make some optimizations so as not
     # to load the internationalization machinery.
     USE_I18N = False
@@ -203,7 +202,7 @@ class Common(Configuration):
         ],
         'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework.authentication.SessionAuthentication',
-            'rest_framework.authentication.TokenAuthentication',
+            'app.users.authentication.TokenAuthentication',
             'rest_framework_simplejwt.authentication.JWTAuthentication',
         )
     }

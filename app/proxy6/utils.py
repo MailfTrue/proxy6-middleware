@@ -2,7 +2,6 @@ from rest_framework import status
 
 
 def make_user_proxy_descr(user):
-    return None
     return f"user#{user.id}"
 
 

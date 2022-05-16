@@ -2,7 +2,6 @@ import axios from 'axios';
 import qs from 'qs';
 import authService from "@/services/auth.service";
 import store from "@/store";
-import {router} from "@/router";
 
 export const baseURL = process.env.VUE_APP_API_BASE_URL || '';
 
@@ -44,7 +43,6 @@ apiService.interceptors.response.use((response) => {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
         else {
             await store.dispatch('auth/logout')
-            await router.push({name: "Login"});
         }
         return apiService(originalRequest);
     }

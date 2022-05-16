@@ -4,10 +4,15 @@ services:
     image: postgres:11.6
     ports:
       - "5432:5432"
+  web:
+    volumes:
+    - "./:/code"
   frontend:
     build:
       context: ./frontend
       dockerfile: ../docker/frontend/Dockerfile-dev
+    volumes:
+    - "./frontend:/usr/src/app"
   documentation:
     ports:
       - "8001:8001"

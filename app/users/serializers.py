@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Token
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -23,3 +23,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'password', 'first_name', 'last_name', 'email', 'auth_token',)
         read_only_fields = ('auth_token',)
         extra_kwargs = {'password': {'write_only': True}}
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = "id", "key", "created", "user_id"
+        read_only_fields = 'key',

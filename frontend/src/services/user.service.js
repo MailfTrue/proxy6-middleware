@@ -12,6 +12,18 @@ class UserService {
         delete data.id;
         return apiService.patch(`${API_URL}${id}/`, data)
     }
+
+    tokens() {
+        return apiService.get(`${API_URL}tokens/`);
+    }
+
+    newToken() {
+        return apiService.post(`${API_URL}tokens/`);
+    }
+
+    deleteToken(id) {
+        return apiService.delete(`${API_URL}tokens/${id}/`)
+    }
 }
 
 export default new UserService();

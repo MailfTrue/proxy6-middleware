@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col lg="4" md="6" offset-lg="4" offset-md="3" sm="12">
+      <v-col lg="4" md="8" offset-lg="4" offset-md="2" sm="12">
         <v-card>
           <v-card-title>
             Авторизация
@@ -10,19 +10,22 @@
           <v-form @submit.prevent="submit">
             <v-card-text>
               <v-container>
+                <v-alert color="error" v-show="errors.detail" v-text="errors.detail"/>
                 <v-row>
-                  <v-text-field v-model="user.username" label="Логин"></v-text-field>
+                  <v-text-field :error-messages="errors.username" v-model="user.username" label="Логин"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field v-model="user.password" type="password" label="Пароль"></v-text-field>
+                  <v-text-field :error-messages="errors.password" v-model="user.password" type="password" label="Пароль"></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions class="justify-end">
+              <v-btn text :to="{name: 'Register'}">
+                У меня нет аккаунта
+              </v-btn>
               <v-btn
                   type="submit"
                   color="teal accent-4"
-                  @click="reveal = true"
               >
                 Войти
               </v-btn>
@@ -41,20 +44,19 @@ export default {
     user: {
       username: "",
       password: ""
-    }
+    },
+    errors: {}
   }),
   methods: {
     submit() {
       if (this.user.username && this.user.password) {
         this.$store.dispatch('auth/login', {user: this.user}).then(
             () => {
-              this.$router.push({name: "Home"});
+              this.$router.push({name: "MyProxy"});
             },
             error => {
-              this.message =
-                  (error.response && error.response.data && error.response.data.message) ||
-                  error.message ||
-                  error.toString();
+              console.error(error)
+              this.errors = error.response.data;
             }
         );
       }
