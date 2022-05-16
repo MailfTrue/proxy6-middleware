@@ -2,8 +2,6 @@ version: '3'
 services:
   postgres:
     image: postgres:11.6
-    ports:
-    - "5432:5432"
   web:
     restart: always
     env_file: .env
@@ -16,8 +14,6 @@ services:
                python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./:/code
-    ports:
-      - "8000:8000"
     depends_on:
       - postgres
   frontend:
@@ -45,5 +41,3 @@ services:
     command: "mkdocs serve"
     volumes:
       - ./:/code
-    ports:
-      - "8001:8001"
