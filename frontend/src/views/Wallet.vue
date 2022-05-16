@@ -13,10 +13,14 @@
       <v-card :loading="!fullUser" :disabled="!fullUser">
         <v-card-title>Пополнить баланс</v-card-title>
         <v-card-text>
-          <v-form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml" method="POST">
+          <v-form @submit="submit" ref="form" action="https://yoomoney.ru/quickpay/confirm.xml" method="POST">
             <v-text-field
                 v-model="amountDue"
                 label="Сумма пополнения, ₽"
+                :rules="[
+                    x => !!x || 'Это поле обязательно',
+                    x => x && x >= 100 || 'Минимальная сумма для пополнения – 100 ₽',
+                ]"
                 filled
                 dense
             ></v-text-field>
@@ -83,6 +87,16 @@ export default {
     },
     paymentsReadable() {
       return this.payments.map((x) => ({...x, datetime: (new Date(x.datetime)).toLocaleString()}))
+    }
+  },
+  methods: {
+    submit(e) {
+      const valid = this.$refs.form.validate()
+      if (!valid) {
+        e.preventDefault()
+        e.stopPropagation()
+        return false
+      }
     }
   },
   mounted() {

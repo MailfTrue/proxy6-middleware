@@ -4,7 +4,7 @@ from django.views.decorators.vary import vary_on_headers
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from django.conf import settings
 from .integrations import Proxy6Client
@@ -47,8 +47,8 @@ class ListProxyAPIView(APIView):
 class BuyProxyAPIView(APIView):
     def get(self, request, format=None):
         price = proxy6_client.getprice(**request.query_params)['price'] * settings.PRICE_MARKUP_FACTOR
-        if price > request.user.balance and False:
-            raise APIException("Not enough money")
+        if price > request.user.balance:
+            raise ValidationError({'detail': "Not enough money"}, code='not_enough_money')
 
         resp = proxy6_client.buy(nokey=True, descr=utils.make_user_proxy_descr(request.user),
                                  version=4, **request.query_params)

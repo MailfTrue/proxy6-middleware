@@ -17,6 +17,7 @@
             <v-select v-model="period" :items="periodOptions" label="Период"></v-select>
           </v-col>
         </v-row>
+        <v-alert color="error" v-show="errors.detail" v-text="errors.detail"/>
       </v-card-text>
       <v-card-actions>
         <v-btn :disabled="!price" type="submit" color="primary" class="buy-btn">
@@ -45,7 +46,8 @@ export default {
       {text: "2 месяца", value: 60},
       {text: "3 месяца", value: 90},
     ],
-    price: null
+    price: null,
+    errors: {}
   }),
   computed: {
     ...mapGetters('proxy', ['countries']),
@@ -69,7 +71,13 @@ export default {
     submit() {
       ProxyService.buy({country: this.country, period: this.period, count: this.count})
         .then(() => this.$router.push({name: "My Proxy"}))
-        .catch(() => alert("Ошибка при покупке. Неизвестная ошибка, попробуйте позже"))
+        .catch((error) => {
+          if (error?.response?.data?.detail) {
+            this.errors = error.response.data
+          } else {
+            alert("Ошибка при покупке. Неизвестная ошибка, попробуйте позже")
+          }
+        })
     }
   },
   mounted() {
