@@ -64,9 +64,10 @@ export default {
     ...mapActions('proxy', ['loadCountries']),
     getPrice() {
       this.price = null
-      ProxyService.price({country: this.country, period: this.period, count: this.count})
-          .then((res) => this.price = res.data.price)
-          .catch(() => alert("Ошибка при загрузке стоимости. Неизвестная ошибка, попробуйте позже"))
+      if (this.country && this.period && this.count)
+        ProxyService.price({country: this.country, period: this.period, count: this.count})
+            .then((res) => this.price = res.data.price)
+            .catch(() => alert("Ошибка при загрузке стоимости. Неизвестная ошибка, попробуйте позже"))
     },
     submit() {
       ProxyService.buy({country: this.country, period: this.period, count: this.count})
