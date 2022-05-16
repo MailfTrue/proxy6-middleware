@@ -5,7 +5,7 @@
       <v-card>
         <v-card-title>Ваш баланс: {{ fullUser.balance }} ₽</v-card-title>
         <v-card-text>
-          <v-data-table :items="payments" :headers="headers" locale="ru" no-data-text="Вы еще не сделали ни одного пополнения" :items-per-page="-1"></v-data-table>
+          <v-data-table :items="paymentsReadable" :headers="headers" locale="ru" no-data-text="Вы еще не сделали ни одного пополнения" :items-per-page="-1"></v-data-table>
         </v-card-text>
       </v-card>
     </v-col>
@@ -80,6 +80,9 @@ export default {
     },
     successUrl() {
       return location.href
+    },
+    paymentsReadable() {
+      return this.payments.map((x) => ({...x, datetime: (new Date(x.datetime)).toLocaleString()}))
     }
   },
   mounted() {
