@@ -5,6 +5,9 @@ import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Set DEBUG to False as a default for safety
+# https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = os.getenv('DJANGO_DEBUG', 'no').lower() in ('true', '1', 'yes', 'on')
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -36,11 +39,23 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-    "http://proxy6.localtest.me:8080",
-]
+CORS_ALLOWED_ORIGINS = []
+if os.getenv('CORS_ALLOWED_ORIGINS'):
+    CORS_ALLOWED_ORIGINS.extend(os.getenv('CORS_ALLOWED_ORIGINS').split(','))
+
+CSRF_TRUSTED_ORIGINS = []
+if os.getenv('CSRF_TRUSTED_ORIGINS'):
+    CSRF_TRUSTED_ORIGINS.extend(os.getenv('CSRF_TRUSTED_ORIGINS').split(','))
+
+if DEBUG:
+    _local_origins = [
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "http://proxy6.localtest.me:8080",
+    ]
+    CORS_ALLOWED_ORIGINS.extend(_local_origins)
+    CSRF_TRUSTED_ORIGINS.extend(_local_origins)
+
 
 ALLOWED_HOSTS = ["*"]
 ROOT_URLCONF = 'app.urls'
@@ -103,9 +118,6 @@ TEMPLATES = [
     },
 ]
 
-# Set DEBUG to False as a default for safety
-# https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = os.getenv('DJANGO_DEBUG', 'no').lower() in ('true', '1', 'yes', 'on')
 
 # Password Validation
 # https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#module-django.contrib.auth.password_validation
