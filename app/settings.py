@@ -223,7 +223,7 @@ YOOMONEY_WEBHOOK_SECRET = os.getenv("YOOMONEY_WEBHOOK_SECRET")
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
 TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
-PRICE_MARKUP_FACTOR = 1.2
+PRICE_MARKUP_FACTOR = 10
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

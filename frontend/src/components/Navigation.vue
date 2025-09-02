@@ -67,7 +67,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Выйти</v-list-item-title>
+          <v-list-item-title>Выйти ({{ fullUser.username }})</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -75,12 +75,15 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+
 export default {
   name: "Navigation",
   props: {
     value: {}
   },
   computed: {
+    ...mapGetters('auth', ['fullUser']),
     drawer: {
       get() { return this.value },
       set(val) { this.$emit("input", val) }
