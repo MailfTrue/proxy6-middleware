@@ -6,7 +6,7 @@
       </v-list-item-icon>
       <v-list-item-content>
         <v-list-item-title class="text-h6">
-          Private Proxy
+          socketproxy
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>

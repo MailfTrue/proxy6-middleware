@@ -1,0 +1,32 @@
+version: '3'
+services:
+  frontend:
+    build:
+      args:
+        - VUE_APP_API_BASE_URL=${VUE_APP_API_BASE_URL}
+  web:
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+  nginx:
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates
+      - static_volume:/var/www/app/staticfiles
+  collectstatic:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    command: >
+      bash -c "dockerize -wait tcp://web:8000 &&
+               dockerize -wait tcp://nginx:80 &&
+               python manage.py collectstatic --noinput"
+    volumes:
+      - ./:/code
+      - static_volume:/code/staticfiles
+    depends_on:
+      - web
+      - nginx
+
+volumes:
+  static_volume:
+    driver: local

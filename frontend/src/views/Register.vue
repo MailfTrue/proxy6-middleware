@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col lg="4" md="8" offset-lg="4" offset-md="2" sm="12">
+      <v-col lg="6" md="8" offset-lg="3" offset-md="2" sm="12">
         <v-card>
           <v-card-title>
             Регистрация

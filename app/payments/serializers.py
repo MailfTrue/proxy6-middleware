@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment
+from .models import Payment, CryptoBotPayment
 import json
 
 
@@ -28,3 +28,42 @@ class PaymentSerializer(serializers.ModelSerializer):
             'unaccepted',
             'raw_data'
         )
+
+
+class CryptoBotPaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CryptoBotPayment
+        fields = (
+            "invoice_id",
+            "hash",
+            "currency_type",
+            "crypto_asset",
+            "fiat_asset",
+            "amount",
+            "status",
+            "created_at",
+            "updated_at",
+        )
+
+
+
+class CryptoBotPaymentCreatedSerializer(serializers.Serializer):
+    url = serializers.URLField()
+    payment = CryptoBotPaymentSerializer()
+
+
+
+class CryptoBotPaymentCreateSerializer(serializers.Serializer):
+    currency_type = serializers.ChoiceField(choices=CryptoBotPayment.CurrencyType.choices)
+    crypto_asset = serializers.ChoiceField(choices=CryptoBotPayment.CryptoAsset.choices, required=False)
+    fiat_asset = serializers.ChoiceField(choices=CryptoBotPayment.FiatAsset.choices, required=False)
+    amount = serializers.DecimalField(max_digits=16, decimal_places=2)
+
+    def validate(self, attrs):
+        if attrs["currency_type"] == CryptoBotPayment.CurrencyType.CRYPTO:
+            if not attrs.get("crypto_asset"):
+                raise serializers.ValidationError("Crypto asset is required")
+        elif attrs["currency_type"] == CryptoBotPayment.CurrencyType.FIAT:
+            if not attrs.get("fiat_asset"):
+                raise serializers.ValidationError("Fiat asset is required")
+        return attrs

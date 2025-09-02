@@ -1,8 +1,12 @@
-from django.urls import path
-from .views import YoomoneyHook, PaymentsList
+from django.urls import path, include
+from .views import PaymentsList, CryptoBotPaymentsList, CryptoBotPaymentCreate, CryptoBotPaymentWebhook
 
 
 urlpatterns = [
-    path('yoomoney/hook/', YoomoneyHook.as_view()),
     path('', PaymentsList.as_view()),
+    path('cryptobot/', include([
+        path('', CryptoBotPaymentsList.as_view()),
+        path('create/', CryptoBotPaymentCreate.as_view()),
+        path('webhook/', CryptoBotPaymentWebhook.as_view()),
+    ])),
 ]

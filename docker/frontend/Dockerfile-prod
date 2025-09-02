@@ -1,9 +1,14 @@
-# Stage 1 - Build React App inside temporary Node container
+# Stage 1 - Build Vue.js App inside temporary Node container
 FROM node:carbon-alpine as builder
 
 WORKDIR /usr/src/app
 COPY . ./
 RUN npm install
+
+# Set default value for VUE_APP_API_BASE_URL if not provided
+ARG VUE_APP_API_BASE_URL
+ENV VUE_APP_API_BASE_URL=${VUE_APP_API_BASE_URL}
+
 RUN npm run-script build
 
 # Stage 2 - Deploy with NGNIX

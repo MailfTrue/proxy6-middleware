@@ -13,7 +13,7 @@
       <v-card :loading="!fullUser" :disabled="!fullUser">
         <v-card-title>Пополнить баланс</v-card-title>
         <v-card-text>
-          <v-form @submit="submit" ref="form" action="https://yoomoney.ru/quickpay/confirm.xml" method="POST">
+          <v-form @submit.prevent="submit" ref="form" method="POST">
             <v-text-field
                 v-model="amountDue"
                 label="Сумма пополнения, ₽"
@@ -65,6 +65,7 @@ export default {
     headers: [
       {text: "Дата", value: "datetime"},
       {text: "ID операции", value: "operation_id"},
+      {text: "Статус", value: "statusText"},
       {text: "Сумма", value: "amount"},
       {text: "Валюта", value: "currency"},
     ]
@@ -86,7 +87,19 @@ export default {
       return location.href
     },
     paymentsReadable() {
-      return this.payments.map((x) => ({...x, datetime: (new Date(x.datetime)).toLocaleString()}))
+      return this.payments.map(
+        (x) => ({
+          ...x, 
+          datetime: (new Date(x.created_at)).toLocaleString(),
+          operation_id: x.invoice_id,
+          currency: x.fiat_asset,
+          statusText: {
+            active: "Ожидает оплаты",
+            paid: "Оплачен",
+            expired: "Истек",
+          }[x.status],
+        })
+      )
     }
   },
   methods: {
@@ -97,10 +110,17 @@ export default {
         e.stopPropagation()
         return false
       }
+      apiService.post("/v1/payments/cryptobot/create/", {
+        amount: this.amountDue,
+        currency_type: "fiat",
+        fiat_asset: "RUB",
+      }).then((res) => {
+        window.open(res.data.url, '_blank')
+      })
     }
   },
   mounted() {
-    apiService.get("/v1/payments/").then((res) => this.payments = res.data)
+    apiService.get("/v1/payments/cryptobot/").then((res) => this.payments = res.data)
   }
 }
 </script>
