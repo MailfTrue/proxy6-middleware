@@ -67,7 +67,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Выйти ({{ fullUser.username }})</v-list-item-title>
+          <v-list-item-title>Выйти ({{ username }})</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -87,6 +87,13 @@ export default {
     drawer: {
       get() { return this.value },
       set(val) { this.$emit("input", val) }
+    },
+    username() {
+      if (this.fullUser) {
+        return this.fullUser.username;
+      } else {
+        return '?'
+      }
     }
   }
 }
