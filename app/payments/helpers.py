@@ -8,9 +8,17 @@ from ..utils import send_tg_notify
 logger = logging.getLogger(__name__)
 
 def confirm_cryptobot_payment(payment_id):
-    payment = CryptoBotPayment.objects.get(invoice_id=payment_id)
     # Обновляем статус платежа и зачисляем средства пользователю
     with transaction.atomic():
+        payment = (
+            CryptoBotPayment.objects
+            .select_for_update()
+            .get(invoice_id=payment_id)
+        )
+        if payment.status == CryptoBotPayment.Status.PAID:
+            logger.error(f"Payment {payment_id} already processed")
+            raise ValueError(f"Payment {payment_id} already processed")
+            return
         payment.status = CryptoBotPayment.Status.PAID
         payment.save()
         
