@@ -42,6 +42,11 @@ export default {
     count: 1,
     period: 30,
     periodOptions: [
+      {text: "1 день", value: 1},
+      {text: "3 дня", value: 3},
+      {text: "1 неделя", value: 7},
+      {text: "2 недели", value: 14},
+      {text: "3 недели", value: 21},
       {text: "1 месяц", value: 30},
       {text: "2 месяца", value: 60},
       {text: "3 месяца", value: 90},

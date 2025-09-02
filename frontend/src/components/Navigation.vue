@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent expand-on-hover :mini-variant="drawer">
+  <v-navigation-drawer :width="350" permanent expand-on-hover :mini-variant="drawer">
     <v-list-item>
       <v-list-item-icon>
         <v-icon>mdi-view-dashboard</v-icon>
@@ -23,7 +23,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Кошелек</v-list-item-title>
+          <v-list-item-title>Кошелек ({{ balance }} ₽)</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link :to="{name: 'Buy Proxy'}">
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapState} from 'vuex';
 
 export default {
   name: "Navigation",
@@ -83,17 +83,16 @@ export default {
     value: {}
   },
   computed: {
-    ...mapGetters('auth', ['fullUser']),
+    ...mapState('auth', ['fullUser']),
     drawer: {
       get() { return this.value },
       set(val) { this.$emit("input", val) }
     },
     username() {
-      if (this.fullUser) {
-        return this.fullUser.username;
-      } else {
-        return '?'
-      }
+      return this.fullUser?.username || '?'
+    },
+    balance() {
+      return this.fullUser?.balance || '?'
     }
   }
 }

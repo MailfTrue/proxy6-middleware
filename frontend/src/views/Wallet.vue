@@ -1,15 +1,7 @@
 <template>
 <v-container>
   <v-row>
-    <v-col cols="12" md="6">
-      <v-card>
-        <v-card-title>Ваш баланс: {{ fullUser.balance }} ₽</v-card-title>
-        <v-card-text>
-          <v-data-table :items="paymentsReadable" :headers="headers" locale="ru" no-data-text="Вы еще не сделали ни одного пополнения" :items-per-page="-1"></v-data-table>
-        </v-card-text>
-      </v-card>
-    </v-col>
-    <v-col cols="12" md="6">
+    <v-col cols="12">
       <v-card :loading="!fullUser" :disabled="!fullUser">
         <v-card-title>Пополнить баланс</v-card-title>
         <v-card-text>
@@ -45,6 +37,14 @@
               Оплатить
             </v-btn>
           </v-form>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12">
+      <v-card>
+        <v-card-title>Ваш баланс: {{ fullUser.balance }} ₽</v-card-title>
+        <v-card-text>
+          <v-data-table :items="paymentsReadable" :headers="headers" locale="ru" no-data-text="Вы еще не сделали ни одного пополнения" :items-per-page="-1"></v-data-table>
         </v-card-text>
       </v-card>
     </v-col>
