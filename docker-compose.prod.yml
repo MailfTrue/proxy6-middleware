@@ -28,6 +28,9 @@ services:
     depends_on:
       - web
       - nginx
+  postgres:
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
 volumes:
   static_volume:
