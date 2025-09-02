@@ -2,14 +2,25 @@
 FROM node:carbon-alpine as builder
 
 WORKDIR /usr/src/app
-COPY . ./
-RUN npm install
+
+# Install yarn globally for better performance
+RUN npm install -g yarn
+
+# Copy package files first to leverage Docker layer caching
+COPY package.json yarn.lock ./
+
+# Install dependencies (this layer will be cached if package.json doesn't change)
+RUN yarn install --frozen-lockfile
+
+# Copy source code
+COPY . .
 
 # Set default value for VUE_APP_API_BASE_URL if not provided
 ARG VUE_APP_API_BASE_URL
 ENV VUE_APP_API_BASE_URL=${VUE_APP_API_BASE_URL}
 
-RUN npm run-script build
+# Build the application
+RUN yarn build
 
 # Stage 2 - Deploy with NGNIX
 FROM nginx:1.15.2-alpine
