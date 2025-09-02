@@ -13,7 +13,7 @@ services:
       - PROXY6_API_KEY=${PROXY6_API_KEY}
   nginx:
     ports:
-      - "80:80"
+      - "8088:80"
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates
       - static_volume:/var/www/app/staticfiles
