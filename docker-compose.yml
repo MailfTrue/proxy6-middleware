@@ -18,13 +18,11 @@ services:
     depends_on:
       - postgres
   frontend:
-    env_file: ./frontend/.env
     build:
       context: ./frontend
       dockerfile: ../docker/frontend/Dockerfile-prod
 
   nginx:
-    env_file: .env
     image: nginx:1.19.8
     depends_on:
       - web
