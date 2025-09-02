@@ -26,8 +26,6 @@ services:
   nginx:
     env_file: .env
     image: nginx:1.19.8
-    ports:
-      - "9080:80"
     depends_on:
       - web
       - frontend

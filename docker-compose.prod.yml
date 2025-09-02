@@ -9,6 +9,8 @@ services:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DATABASE_URL=${DATABASE_URL}
   nginx:
+    ports:
+      - "80:80"
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates
       - static_volume:/var/www/app/staticfiles
