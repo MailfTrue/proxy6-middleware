@@ -1,15 +1,8 @@
 FROM node:carbon-alpine
 
 WORKDIR /usr/src/app
-
-# Install yarn globally for better performance
-RUN npm install -g yarn
-
-# Copy package files first to leverage Docker layer caching
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
-# Copy source code
+COPY ./package*.json ./
+RUN npm install
 COPY . .
 EXPOSE 80
-CMD ["yarn", "serve", "--port", "80", "--host", "0.0.0.0"]
+CMD ["npm", "run", "serve", "--", "--port", "80", "--host", "0.0.0.0"]
