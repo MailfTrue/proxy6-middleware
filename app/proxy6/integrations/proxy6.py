@@ -3,6 +3,7 @@ from django.db.models.functions import Now
 import httpx
 from django.conf import settings
 
+from app.proxy6.helpers import send_not_enough_money_error
 from app.proxy6.models import PurchasedProxy
 from app.proxy6.utils import make_user_proxy_descr
 from app.payments.helpers import write_off_user_balance
@@ -13,7 +14,7 @@ PROXY6_VERSION = 4
 
 
 class Proxy6ClientError(Exception):
-    default_detail = "Proxy error"
+    default_detail = {"detail": "Proxy error"}
 
     def __init__(self, detail=None):
         if detail is None:
@@ -62,6 +63,7 @@ class Proxy6Client:
         params['descr'] = make_user_proxy_descr(user)
         price = self.getprice(user, **params)['price']
         if price > user.balance:
+            send_not_enough_money_error(user, price, "Покупка прокси")
             raise Proxy6ClientError({'detail': "Not enough money", "code": "not_enough_money"})
         resp = self.api_call(user, "buy", params)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
@@ -96,6 +98,7 @@ class Proxy6Client:
             version=PROXY6_VERSION,
         )['price']
         if price > user.balance:
+            send_not_enough_money_error(user, price, "Продление прокси")
             raise Proxy6ClientError({'detail': "Not enough money", "code": "not_enough_money"})
         resp = self.api_call(user, "prolong", params)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
