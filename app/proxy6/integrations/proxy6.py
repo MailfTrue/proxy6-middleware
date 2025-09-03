@@ -113,6 +113,8 @@ class Proxy6Client:
         return resp
 
     def delete(self, user, **params):
+        if 'ids' not in params:
+            raise Proxy6ClientError({'detail': "ids is required"}, code='ids_required')
         resp = self.api_call(user, "delete", params)
         (
             PurchasedProxy.objects
