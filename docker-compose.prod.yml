@@ -4,11 +4,11 @@ services:
       args:
         - VUE_APP_API_BASE_URL=${VUE_APP_API_BASE_URL}
   web:
-    env_file: .env.prod
+    env_file: .env-backend.prod
   celery_beat:
-    env_file: .env.prod
+    env_file: .env-backend.prod
   celery_worker:
-    env_file: .env.prod
+    env_file: .env-backend.prod
   nginx:
     ports:
       - "8088:80"
