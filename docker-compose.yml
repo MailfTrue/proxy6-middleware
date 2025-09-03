@@ -4,7 +4,11 @@ services:
     image: postgres:16
     volumes:
       - postgres:/var/lib/postgresql/data/
-  web:
+  redis:
+    image: redis:7
+    volumes:
+      - redis:/data
+  web: &django_app
     restart: always
     build:
       context: .
@@ -29,7 +33,21 @@ services:
       - frontend
     volumes:
       - ./docker/nginx/templates:/etc/nginx/templates
+    
+  celery_beat:
+    <<: *django_app
+    command: >
+      bash -c "dockerize -wait tcp://postgres:5432 &&
+               celery -A app.celery:app beat --loglevel=info"
+
+  celery_worker:
+    <<: *django_app
+    command: >
+      bash -c "dockerize -wait tcp://postgres:5432 &&
+               celery -A app.celery:app worker --loglevel=info"
 
 volumes:
   postgres:
+    driver: local
+  redis:
     driver: local

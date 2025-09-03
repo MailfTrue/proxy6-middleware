@@ -1,31 +1,44 @@
 <template>
-  <v-data-table :items="listReadable" :headers="headers" no-data-text="У вас нет прокси" >
-
+  <v-data-table :items="listReadable" :headers="headers" no-data-text="You have no proxies" >
+    <template v-slot:item.actions="{ item }">
+      <v-btn @click="deleteProxy(item)" color="error" icon outlined>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </template>
   </v-data-table>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import {countryPretty} from "../utils";
+import ProxyService from "../services/proxy.service";
 
 export default {
   name: "MyProxy",
   data: () => ({
     headers: [
       {text: "ID", value: "id"},
-      {text: "Активен", value: "active"},
-      {text: "Хост", value: "host"},
+      {text: "Active", value: "active"},
+      {text: "Host", value: "host"},
       {text: "IP", value: "ip"},
-      {text: "Порт", value: "port"},
-      {text: "Логин", value: "user"},
-      {text: "Пароль", value: "pass"},
-      {text: "Страна", value: "country"},
-      {text: "Дата приобретения", value: "date"},
-      {text: "Дата окончания", value: "date_end"},
+      {text: "Port", value: "port"},
+      {text: "Username", value: "user"},
+      {text: "Password", value: "pass"},
+      {text: "Country", value: "country"},
+      {text: "Purchase Date", value: "date"},
+      {text: "End Date", value: "date_end"},
+      {text: "Actions", value: "actions", sortable: false},
     ]
   }),
   methods: {
     ...mapActions('proxy', ['loadList']),
+    deleteProxy(proxy) {
+      ProxyService.delete({ids: proxy.id})
+        .then(() => this.loadList())
+        .catch((error) => {
+          console.error(error)
+        })
+    }
   },
   computed: {
     ...mapGetters('proxy', ['list']),

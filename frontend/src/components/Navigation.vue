@@ -23,7 +23,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Кошелек ({{ balance }} ₽)</v-list-item-title>
+          <v-list-item-title>Wallet ({{ balance }} ₽)</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link :to="{name: 'Buy Proxy'}">
@@ -32,7 +32,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Купить прокси</v-list-item-title>
+          <v-list-item-title>Buy Proxy</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link :to="{name: 'My Proxy'}">
@@ -41,7 +41,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Мои прокси</v-list-item-title>
+          <v-list-item-title>My Proxies</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item link :to="{name: 'API'}">
@@ -67,7 +67,7 @@
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>Выйти ({{ username }})</v-list-item-title>
+          <v-list-item-title>Logout ({{ username }})</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

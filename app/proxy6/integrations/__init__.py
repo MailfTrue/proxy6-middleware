@@ -1,1 +1,1 @@
-from .proxy6 import Proxy6Client
+from .proxy6 import proxy6_client

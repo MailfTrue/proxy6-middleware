@@ -22,6 +22,10 @@ class ProxyService {
     buy(params) {
         return apiService.get(`${API_URL}/buy`, {params});
     }
+
+    delete(params) {
+        return apiService.get(`${API_URL}/delete`, {params});
+    }
 }
 
 export default new ProxyService();

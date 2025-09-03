@@ -214,7 +214,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'app.users.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'app.core.drf_exception_handlers.custom_exception_handler',
 }
 
 PROXY6_API_KEY = os.getenv("PROXY6_API_KEY")
@@ -223,7 +224,10 @@ YOOMONEY_WEBHOOK_SECRET = os.getenv("YOOMONEY_WEBHOOK_SECRET")
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
 TG_CHAT_ID = os.getenv("TG_CHAT_ID")
 
-PRICE_MARKUP_FACTOR = 10
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://redis:6379/1")
+
+PRICE_MARKUP_FACTOR = int(os.getenv("PRICE_MARKUP_FACTOR", 10))
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -4,32 +4,32 @@
       <v-col lg="6" md="8" offset-lg="3" offset-md="2" sm="12">
         <v-card>
           <v-card-title>
-            Регистрация
+            Registration
           </v-card-title>
 
           <v-form @submit.prevent="submit" ref="form">
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-text-field :error-messages="errors.username" :rules="rules.username" v-model="user.username" label="Логин"></v-text-field>
+                  <v-text-field :error-messages="errors.username" :rules="rules.username" v-model="user.username" label="Username"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field :error-messages="errors.password" :rules="rules.password" v-model="user.password" type="password" label="Пароль"></v-text-field>
+                  <v-text-field :error-messages="errors.password" :rules="rules.password" v-model="user.password" type="password" label="Password"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field :rules="rules.password2" v-model="user.password2" type="password" label="Повторите пароль"></v-text-field>
+                  <v-text-field :rules="rules.password2" v-model="user.password2" type="password" label="Repeat Password"></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn text :to="{name: 'Login'}">
-                Я уже зарегистрирован
+                I'm already registered
               </v-btn>
               <v-btn
                   type="submit"
                   color="teal accent-4"
               >
-                Зарегистрироваться
+                Register
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -54,19 +54,19 @@ export default {
       },
       rules: {
         username: [
-          (x) => !!x || "Обязательное поле",
-          (x) => x && x.length >= 5 || "Минимальная длина 5 символов",
-          (x) => x && x.length <= 22 || "Максимальная длина 22 символа",
-          (x) => x && /^(?=[a-zA-Z0-9._]{5,22}$)(?!.*[_.]{2})[^_.].*[^_.]$/.test(x) || "Недопустимый логин",
+          (x) => !!x || "Required field",
+          (x) => x && x.length >= 5 || "Minimum length 5 characters",
+          (x) => x && x.length <= 22 || "Maximum length 22 characters",
+          (x) => x && /^(?=[a-zA-Z0-9._]{5,22}$)(?!.*[_.]{2})[^_.].*[^_.]$/.test(x) || "Invalid username",
         ],
         password: [
-          (x) => !!x || "Обязательное поле",
-          (x) => x && x.length >= 5 || "Минимальная длина 5 символов",
-          (x) => x && x.length <= 22 || "Максимальная длина 22 символа",
+          (x) => !!x || "Required field",
+          (x) => x && x.length >= 5 || "Minimum length 5 characters",
+          (x) => x && x.length <= 22 || "Maximum length 22 characters",
         ],
         password2: [
-          (x) => !!x || "Обязательное поле",
-          (x) => x && this.user.password === x || "Пароли не совпадают"
+          (x) => !!x || "Required field",
+          (x) => x && this.user.password === x || "Passwords don't match"
         ]
       },
       errors: {}

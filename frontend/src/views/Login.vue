@@ -4,7 +4,7 @@
       <v-col lg="4" md="8" offset-lg="4" offset-md="2" sm="12">
         <v-card>
           <v-card-title>
-            Авторизация
+            Authorization
           </v-card-title>
 
           <v-form @submit.prevent="submit">
@@ -12,22 +12,22 @@
               <v-container>
                 <v-alert color="error" v-show="errors.detail" v-text="errors.detail"/>
                 <v-row>
-                  <v-text-field :error-messages="errors.username" v-model="user.username" label="Логин"></v-text-field>
+                  <v-text-field :error-messages="errors.username" v-model="user.username" label="Username"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field :error-messages="errors.password" v-model="user.password" type="password" label="Пароль"></v-text-field>
+                  <v-text-field :error-messages="errors.password" v-model="user.password" type="password" label="Password"></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
             <v-card-actions class="justify-end">
               <v-btn text :to="{name: 'Register'}">
-                У меня нет аккаунта
+                I don't have an account
               </v-btn>
               <v-btn
                   type="submit"
                   color="teal accent-4"
               >
-                Войти
+                Login
               </v-btn>
             </v-card-actions>
           </v-form>

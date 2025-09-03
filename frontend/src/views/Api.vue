@@ -5,14 +5,14 @@
         <v-toolbar
             flat
         >
-          <v-toolbar-title>Мои токены</v-toolbar-title>
+          <v-toolbar-title>My Tokens</v-toolbar-title>
           <v-divider
               class="mx-4"
               inset
               vertical
           ></v-divider>
           <v-spacer></v-spacer>
-          <v-btn @click="createToken" color="primary">Создать еще один</v-btn>
+          <v-btn @click="createToken" color="primary">Create Another One</v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -34,9 +34,9 @@ export default {
   data: () => ({
     tokens: [],
     headers: [
-      {text: "Ключ", value: "key"},
-      {text: "Дата создания", value: "created"},
-      { text: 'Действия', value: 'actions', sortable: false },
+      {text: "Key", value: "key"},
+      {text: "Creation Date", value: "created"},
+      { text: 'Actions', value: 'actions', sortable: false },
     ]
   }),
   computed: {

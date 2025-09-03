@@ -8,4 +8,5 @@ urlpatterns = [
     path("count", views.GetCountAPIView.as_view()),
     path("list", views.ListProxyAPIView.as_view()),
     path("buy", views.BuyProxyAPIView.as_view()),
+    path("delete", views.DeleteProxyAPIView.as_view()),
 ]

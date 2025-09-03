@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db.models import F
 from django.db import transaction
 import logging
@@ -42,3 +43,23 @@ def confirm_cryptobot_payment(payment_id):
                 logger.error(f"Failed to send Telegram notification: {e}")
         else:
             logger.error(f"No user associated with payment {payment_id}")
+
+
+def write_off_user_balance(user, amount):
+    amount = Decimal(amount)
+    with transaction.atomic():
+        user.balance -= amount
+        user.save()
+        user.refresh_from_db()
+
+        logger.info(f"Successfully wrote off {amount} RUB from user {user.id}")
+
+        try:
+            send_tg_notify(
+                f"💰 Списание средств\n"
+                f"Пользователь: {user.username}\n"
+                f"Сумма: {amount} RUB\n"
+                f"Новый баланс: {user.balance} RUB"
+            )
+        except Exception as e:
+            logger.error(f"Failed to send Telegram notification: {e}")

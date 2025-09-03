@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 def send_tg_notify(text):
-    print("sending...", text)
+    print("sending...\n", text)
     try:
         thread = threading.Thread(target=httpx.post,
                                   args=[f"https://api.telegram.org/bot{settings.TG_BOT_TOKEN}/sendMessage"],

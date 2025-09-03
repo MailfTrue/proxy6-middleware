@@ -1,4 +1,4 @@
-let regionNames = new Intl.DisplayNames(['ru'], {type: 'region'});
+let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
 
 
 export function countryName(country) {

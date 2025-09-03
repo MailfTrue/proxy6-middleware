@@ -1,29 +1,29 @@
 <template>
   <v-card>
     <v-card-title>
-      Купить прокси
+      Buy Proxy
     </v-card-title>
 
     <v-form @submit.prevent="submit">
       <v-card-text>
         <v-row>
           <v-col cols="4">
-            <v-select v-model="country" :items="countriesSelect" label="Страна"></v-select>
+            <v-select v-model="country" :items="countriesSelect" label="Country"></v-select>
           </v-col>
           <v-col cols="4">
-            <v-text-field v-model="count" label="Количество" type="number"></v-text-field>
+            <v-text-field v-model="count" label="Quantity" type="number"></v-text-field>
           </v-col>
           <v-col cols="4">
-            <v-select v-model="period" :items="periodOptions" label="Период"></v-select>
+            <v-select v-model="period" :items="periodOptions" label="Period"></v-select>
           </v-col>
         </v-row>
         <v-alert color="error" v-show="errors.detail" v-text="errors.detail"/>
       </v-card-text>
       <v-card-actions>
         <v-btn :disabled="!price" type="submit" color="primary" class="buy-btn">
-          Купить
+          Buy
           <template v-if="price">
-            за {{ Math.ceil(price) }} ₽
+            for {{ Math.ceil(price) }} ₽
           </template></v-btn>
       </v-card-actions>
     </v-form>
@@ -42,14 +42,12 @@ export default {
     count: 1,
     period: 30,
     periodOptions: [
-      {text: "1 день", value: 1},
-      {text: "3 дня", value: 3},
-      {text: "1 неделя", value: 7},
-      {text: "2 недели", value: 14},
-      {text: "3 недели", value: 21},
-      {text: "1 месяц", value: 30},
-      {text: "2 месяца", value: 60},
-      {text: "3 месяца", value: 90},
+      {text: "1 week", value: 7},
+      {text: "2 weeks", value: 14},
+      {text: "3 weeks", value: 21},
+      {text: "1 month", value: 30},
+      {text: "2 months", value: 60},
+      {text: "3 months", value: 90},
     ],
     price: null,
     errors: {}
@@ -72,7 +70,7 @@ export default {
       if (this.country && this.period && this.count)
         ProxyService.price({country: this.country, period: this.period, count: this.count})
             .then((res) => this.price = res.data.price)
-            .catch(() => alert("Ошибка при загрузке стоимости. Неизвестная ошибка, попробуйте позже"))
+            .catch(() => alert("Error loading price. Unknown error, please try again later"))
     },
     submit() {
       ProxyService.buy({country: this.country, period: this.period, count: this.count})
@@ -81,7 +79,7 @@ export default {
           if (error?.response?.data?.detail) {
             this.errors = error.response.data
           } else {
-            alert("Ошибка при покупке. Неизвестная ошибка, попробуйте позже")
+            alert("Purchase error. Unknown error, please try again later")
           }
         })
     }

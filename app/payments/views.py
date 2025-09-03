@@ -18,10 +18,6 @@ from app.payments.helpers import confirm_cryptobot_payment
 
 from .models import Payment, CryptoBotPayment
 from .serializers import CryptoBotPaymentCreatedSerializer, PaymentSerializer, CryptoBotPaymentSerializer, CryptoBotPaymentCreateSerializer
-from .integrations import Yoomoney
-from ..utils import send_tg_notify
-
-from collections import defaultdict
 
 import logging
 

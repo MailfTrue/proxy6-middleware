@@ -52,16 +52,16 @@ apiService.interceptors.response.use((response) => {
         return apiService(originalRequest);
     }
 
-    // Логируем ошибки
+    // Log errors
     if (responseStatus !== 401) {
         const errorData = error.response.data;
-        let text = 'Неизвестная ошибка';
+        let text = 'Unknown error';
         if (errorData instanceof Object) {
             text = Object.values(errorData).join(', ')
         } else if (responseStatus) {
-            text = 'Сервер недоступен'
+            text = 'Server unavailable'
         }
-        console.log("Ошибка:", text)
+        console.log("Error:", text)
     }
     return Promise.reject(error);
 });
