@@ -40,11 +40,19 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="12">
+    <v-col cols="12" md="6">
       <v-card>
         <v-card-title>Your Balance: {{ fullUser.balance }} ₽</v-card-title>
         <v-card-text>
           <v-data-table :items="paymentsReadable" :headers="headers" locale="en" no-data-text="You haven't made any top-ups yet" :items-per-page="-1"></v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col cols="12" md="6">
+      <v-card>
+        <v-card-title>Write-offs</v-card-title>
+        <v-card-text>
+          <v-data-table :items="writeOffsReadable" :headers="writeOffsHeaders" locale="en" no-data-text="You haven't any write-offs yet" :items-per-page="-1"></v-data-table>
         </v-card-text>
       </v-card>
     </v-col>
@@ -68,7 +76,13 @@ export default {
       {text: "Status", value: "statusText"},
       {text: "Amount", value: "amount"},
       {text: "Currency", value: "currency"},
-    ]
+    ],
+    writeOffs: [],
+    writeOffsHeaders: [
+      {text: "Date", value: "datetime"},
+      {text: "Description", value: "description"},
+      {text: "Amount", value: "amount"},
+    ],
   }),
   computed: {
     ...mapState('auth', ['fullUser']),
@@ -100,7 +114,12 @@ export default {
           }[x.status],
         })
       )
-    }
+    },
+    writeOffsReadable() {
+      return this.writeOffs.map(
+        (x) => ({...x, datetime: (new Date(x.created_at)).toLocaleString()})
+      )
+    },
   },
   methods: {
     submit(e) {
@@ -121,6 +140,7 @@ export default {
   },
   mounted() {
     apiService.get("/v1/payments/cryptobot/").then((res) => this.payments = res.data)
+    apiService.get("/v1/payments/write-offs/").then((res) => this.writeOffs = res.data)
   }
 }
 </script>
