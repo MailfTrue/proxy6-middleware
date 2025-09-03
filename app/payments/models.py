@@ -70,5 +70,8 @@ class UserWriteOff(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(null=True, blank=True)
 
+    class Meta:
+        ordering = ["-created_at"]
+
     def __str__(self):
         return f"{self.user_id} {self.amount}"
