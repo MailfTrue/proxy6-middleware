@@ -29,7 +29,7 @@ def prolong_user_proxies(user_id):
     now = datetime.now()
     for proxy in proxies['list']:
         date_end = datetime.fromisoformat(proxy['date_end'])
-        if date_end - now < timedelta(days=1) or proxy['id'] == '34225265':
+        if date_end - now < timedelta(days=1):
             need_prolong.append(proxy['id'])
 
     prolong_proxies = (
