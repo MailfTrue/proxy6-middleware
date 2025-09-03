@@ -14,16 +14,12 @@ PROXY6_VERSION = 4
 
 class Proxy6ClientError(Exception):
     default_detail = "Proxy error"
-    default_code = 'invalid'
 
-    def __init__(self, detail=None, code=None):
+    def __init__(self, detail=None):
         if detail is None:
             detail = self.default_detail
-        if code is None:
-            code = self.default_code
 
         self.detail = detail
-        self.code = code
 
 
 class Proxy6Client:
@@ -66,7 +62,7 @@ class Proxy6Client:
         params['descr'] = make_user_proxy_descr(user)
         price = self.getprice(user, **params)['price']
         if price > user.balance:
-            raise Proxy6ClientError({'detail': "Not enough money"}, code='not_enough_money')
+            raise Proxy6ClientError({'detail': "Not enough money", "code": "not_enough_money"})
         resp = self.api_call(user, "buy", params)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
         with transaction.atomic():
@@ -100,7 +96,7 @@ class Proxy6Client:
             version=PROXY6_VERSION,
         )['price']
         if price > user.balance:
-            raise Proxy6ClientError({'detail': "Not enough money"}, code='not_enough_money')
+            raise Proxy6ClientError({'detail': "Not enough money", "code": "not_enough_money"})
         resp = self.api_call(user, "prolong", params)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
 
@@ -114,7 +110,7 @@ class Proxy6Client:
 
     def delete(self, user, **params):
         if 'ids' not in params:
-            raise Proxy6ClientError({'detail': "ids is required"}, code='ids_required')
+            raise Proxy6ClientError({'detail': "ids is required", "code": "ids_required"})
         resp = self.api_call(user, "delete", params)
         (
             PurchasedProxy.objects
@@ -161,7 +157,7 @@ class Proxy6Client:
                 f"Method: {method}\n"
                 f"Params: {params}"
             )
-            raise Proxy6ClientError({'detail': data['error_descr']}, code=data['error_id'])
+            raise Proxy6ClientError({'detail': data['error_descr'], "code": data['error_id']})
 
         return data
 

@@ -12,7 +12,7 @@ def custom_exception_handler(exc, context):
         if isinstance(exc, Proxy6ClientError):
             response = Response(
                 exc.detail,
-                status=exc.code,
+                status=500,
             )
 
     return response
