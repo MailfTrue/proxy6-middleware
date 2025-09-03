@@ -16,8 +16,8 @@ from rest_framework import serializers
 
 from app.payments.helpers import confirm_cryptobot_payment
 
-from .models import Payment, CryptoBotPayment
-from .serializers import CryptoBotPaymentCreatedSerializer, PaymentSerializer, CryptoBotPaymentSerializer, CryptoBotPaymentCreateSerializer
+from .models import Payment, CryptoBotPayment, UserWriteOff
+from .serializers import CryptoBotPaymentCreatedSerializer, PaymentSerializer, CryptoBotPaymentSerializer, CryptoBotPaymentCreateSerializer, UserWriteOffSerializer
 
 import logging
 
@@ -43,6 +43,14 @@ class CryptoBotPaymentsList(ListAPIView):
 
     def get_queryset(self):
         return CryptoBotPayment.objects.filter(user=self.request.user)
+
+
+class UserWriteOffList(ListAPIView):
+    serializer_class = UserWriteOffSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return UserWriteOff.objects.filter(user=self.request.user)
 
 
 class CryptoBotPaymentCreate(APIView):

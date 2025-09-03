@@ -3,7 +3,7 @@ from django.db.models import F
 from django.db import transaction
 import logging
 
-from .models import Payment, CryptoBotPayment
+from .models import CryptoBotPayment, UserWriteOff
 from ..utils import send_tg_notify
 
 logger = logging.getLogger(__name__)
@@ -45,11 +45,12 @@ def confirm_cryptobot_payment(payment_id):
             logger.error(f"No user associated with payment {payment_id}")
 
 
-def write_off_user_balance(user, amount):
+def write_off_user_balance(user, amount, description=None):
     amount = Decimal(amount)
     with transaction.atomic():
         user.balance -= amount
         user.save()
+        UserWriteOff.objects.create(user=user, amount=amount, description=description)
         user.refresh_from_db()
 
         logger.info(f"Successfully wrote off {amount} RUB from user {user.id}")

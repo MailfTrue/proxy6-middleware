@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment, CryptoBotPayment
+from .models import Payment, CryptoBotPayment, UserWriteOff
 import json
 
 
@@ -67,3 +67,9 @@ class CryptoBotPaymentCreateSerializer(serializers.Serializer):
             if not attrs.get("fiat_asset"):
                 raise serializers.ValidationError("Fiat asset is required")
         return attrs
+
+
+class UserWriteOffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserWriteOff
+        fields = ("amount", "created_at", "description")

@@ -77,13 +77,25 @@ class Proxy6Client:
                     period=params['period'],
                 ) for proxy in resp['list']
             ])
-            write_off_user_balance(user, resp['price'])
+
+            proxy_ids = ','.join([proxy['id'] for proxy in resp['list']])
+            description = (
+                f"Purchase {params['count']} proxies "
+                f"for {params['period']} days: "
+                f"{proxy_ids}"
+            )
+            write_off_user_balance(
+                user, 
+                resp['price'], 
+                description=description,
+            )
         return resp
 
     def prolong(self, user, **params):
+        proxy_ids = params['ids'].split(',')
         price = self.getprice(
             user,
-            count=len(params['ids'].split(',')),
+            count=len(proxy_ids),
             period=params['period'],
             version=PROXY6_VERSION,
         )['price']
@@ -91,7 +103,13 @@ class Proxy6Client:
             raise Proxy6ClientError({'detail': "Not enough money"}, code='not_enough_money')
         resp = self.api_call(user, "prolong", params)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
-        write_off_user_balance(user, resp['price'])
+
+        description = (
+            f"Prolongation {len(proxy_ids)} proxies "
+            f"for {params['period']} days: "
+            f"{', '.join(proxy_ids)}"
+        )
+        write_off_user_balance(user, resp['price'], description=description)
         return resp
 
     def delete(self, user, **params):
