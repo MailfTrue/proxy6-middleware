@@ -19,7 +19,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'check-payments': {
-        'task': 'app.payments.tasks.check_payments',
+        'task': 'app.proxy6.tasks.prolong_users_proxies',
         'schedule': crontab(minute="*/30"),
     },
 }
