@@ -42,7 +42,11 @@ class CryptoBotPaymentsList(ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return CryptoBotPayment.objects.filter(user=self.request.user)
+        return (
+            CryptoBotPayment.objects
+            .filter(user=self.request.user)
+            .order_by("-created_at")
+        )
 
 
 class UserWriteOffList(ListAPIView):
@@ -50,7 +54,11 @@ class UserWriteOffList(ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return UserWriteOff.objects.filter(user=self.request.user)
+        return (
+            UserWriteOff.objects
+            .filter(user=self.request.user)
+            .order_by("-created_at")
+        )
 
 
 class CryptoBotPaymentCreate(APIView):
