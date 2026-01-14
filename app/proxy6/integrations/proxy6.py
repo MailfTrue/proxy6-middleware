@@ -39,7 +39,7 @@ class Proxy6Client:
 
     def __init__(self, api_key):
         self.__api_key = api_key
-        self.client = httpx.Client(base_url=f"https://px6.me/api/{api_key}", timeout=30)
+        self.client = httpx.Client(base_url=f"https://px6.link/api/{api_key}", timeout=30)
 
     def __getattr__(self, item):
         if item in self.API_METHODS:
