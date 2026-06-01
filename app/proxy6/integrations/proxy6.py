@@ -125,7 +125,7 @@ class Proxy6Client:
         if price > user.balance:
             send_not_enough_money_error(user, price, "Продление прокси")
             raise Proxy6ClientError({'detail': "Not enough money", "code": "not_enough_money"})
-        resp = self.api_call(user, "prolong", params)
+        resp = self.api_call(user, "prolong", params, notify=False)
         resp['price'] = float(resp['price']) * settings.PRICE_MARKUP_FACTOR
 
         description = (
@@ -151,7 +151,7 @@ class Proxy6Client:
         )
         return resp
 
-    def api_call(self, user, method, params=None, hide_user_data=True, retries=3):
+    def api_call(self, user, method, params=None, hide_user_data=True, retries=3, notify=True):
         for attempt in range(retries):
             self.rate_limiter.acquire()
             try:
@@ -200,12 +200,13 @@ class Proxy6Client:
                 410: 'Error price - Price calculation error. Final price is less than or equal to zero'
             }
             data['error_descr'] = error_descriptions.get(data['error_id'], error_descriptions[30])
-            send_tg_notify(
-                f"Proxy6 error: {data['error_descr']}\n"
-                f"User: {user.username}\n"
-                f"Method: {method}\n"
-                f"Params: {params}"
-            )
+            if notify:
+                send_tg_notify(
+                    f"Proxy6 error: {data['error_descr']}\n"
+                    f"User: {user.username}\n"
+                    f"Method: {method}\n"
+                    f"Params: {params}"
+                )
             raise Proxy6ClientError({'detail': data['error_descr'], "code": data['error_id']})
 
         return data
