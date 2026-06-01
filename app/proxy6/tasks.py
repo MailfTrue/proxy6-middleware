@@ -45,6 +45,7 @@ def prolong_user_proxies(user_id):
         .values_list('proxy_id', 'period')
     )
 
+    errors = []
     for proxy_id, period in prolong_proxies:
         try:
             proxy6_client.prolong(
@@ -55,5 +56,8 @@ def prolong_user_proxies(user_id):
             logger.info(f"Successfully prolonged proxy {proxy_id} for user {user.username}")
         except Proxy6ClientError as e:
             logger.error(f"Failed to prolong proxy {proxy_id} for user {user.username}: {e}")
-            send_prolong_error_notification(user, proxy_id, str(e))
+            errors.append((proxy_id, str(e)))
+
+    if errors:
+        send_prolong_error_notification(user, errors)
 

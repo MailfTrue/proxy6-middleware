@@ -17,10 +17,11 @@ def send_not_enough_money_error(user, amount, operation):
     )
 
 
-def send_prolong_error_notification(user, proxy_id, error):
+def send_prolong_error_notification(user, errors):
+    error_lines = [f"- Proxy ID {pid}: {err}" for pid, err in errors]
     send_tg_notify(
-        f"Ошибка продления прокси\n"
+        f"Ошибки продления прокси\n"
         f"Пользователь: {user.username}\n"
-        f"Proxy ID: {proxy_id}\n"
-        f"Ошибка: {error}"
+        f"Количество ошибок: {len(errors)}\n"
+        + "\n".join(error_lines)
     )
