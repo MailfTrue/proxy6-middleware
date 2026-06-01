@@ -154,7 +154,15 @@ class Proxy6Client:
     def api_call(self, user, method, params=None, hide_user_data=True, retries=3):
         for attempt in range(retries):
             self.rate_limiter.acquire()
-            resp = self.client.get(method, params=params)
+            try:
+                resp = self.client.get(method, params=params)
+            except (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.ConnectError) as e:
+                if attempt < retries - 1:
+                    wait = 2 ** attempt
+                    logger.warning(f"HTTP error on {method}: {e}, retrying in {wait}s...")
+                    time.sleep(wait)
+                    continue
+                raise Proxy6ClientError({'detail': str(e), 'code': 'http_error'})
             if resp.status_code == 429:
                 if attempt < retries - 1:
                     wait = 2 ** attempt
@@ -165,7 +173,7 @@ class Proxy6Client:
             data = resp.json()
             break
         else:
-            raise Proxy6ClientError({'detail': 'Rate limited', 'code': 'rate_limited'})
+            raise Proxy6ClientError({'detail': 'Max retries exceeded', 'code': 'max_retries'})
         if hide_user_data:
             for key in ["user_id", "balance", "currency"]:
                 if key in data:
