@@ -1,5 +1,6 @@
 import logging
 import time
+import threading
 from django.db import transaction
 from django.db.models.functions import Now
 import httpx
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 PROXY6_VERSION = 4
+PROXY6_RATE_LIMIT = 3  # requests per second
 
 
 class Proxy6ClientError(Exception):
@@ -25,6 +27,24 @@ class Proxy6ClientError(Exception):
             detail = self.default_detail
 
         self.detail = detail
+
+
+class RateLimiter:
+    def __init__(self, max_requests, period):
+        self.max_requests = max_requests
+        self.period = period
+        self.timestamps = []
+        self.lock = threading.Lock()
+
+    def acquire(self):
+        with self.lock:
+            now = time.monotonic()
+            self.timestamps = [t for t in self.timestamps if now - t < self.period]
+            if len(self.timestamps) >= self.max_requests:
+                sleep_time = self.period - (now - self.timestamps[0])
+                if sleep_time > 0:
+                    time.sleep(sleep_time)
+            self.timestamps.append(time.monotonic())
 
 
 class Proxy6Client:
@@ -44,6 +64,7 @@ class Proxy6Client:
     def __init__(self, api_key):
         self.__api_key = api_key
         self.client = httpx.Client(base_url=f"https://px6.link/api/{api_key}", timeout=30)
+        self.rate_limiter = RateLimiter(PROXY6_RATE_LIMIT, 1.0)
 
     def __getattr__(self, item):
         if item in self.API_METHODS:
@@ -132,6 +153,7 @@ class Proxy6Client:
 
     def api_call(self, user, method, params=None, hide_user_data=True, retries=3):
         for attempt in range(retries):
+            self.rate_limiter.acquire()
             resp = self.client.get(method, params=params)
             if resp.status_code == 429:
                 if attempt < retries - 1:
