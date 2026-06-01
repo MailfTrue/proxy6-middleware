@@ -1,3 +1,5 @@
+import logging
+import time
 from django.db import transaction
 from django.db.models.functions import Now
 import httpx
@@ -8,6 +10,8 @@ from app.proxy6.models import PurchasedProxy
 from app.proxy6.utils import make_user_proxy_descr
 from app.payments.helpers import write_off_user_balance
 from app.utils import send_tg_notify
+
+logger = logging.getLogger(__name__)
 
 
 PROXY6_VERSION = 4
@@ -126,8 +130,20 @@ class Proxy6Client:
         )
         return resp
 
-    def api_call(self, user, method, params=None, hide_user_data=True):
-        data = self.client.get(method, params=params).json()
+    def api_call(self, user, method, params=None, hide_user_data=True, retries=3):
+        for attempt in range(retries):
+            resp = self.client.get(method, params=params)
+            if resp.status_code == 429:
+                if attempt < retries - 1:
+                    wait = 2 ** attempt
+                    logger.warning(f"Rate limited on {method}, retrying in {wait}s...")
+                    time.sleep(wait)
+                    continue
+                raise Proxy6ClientError({'detail': 'Rate limited', 'code': 'rate_limited'})
+            data = resp.json()
+            break
+        else:
+            raise Proxy6ClientError({'detail': 'Rate limited', 'code': 'rate_limited'})
         if hide_user_data:
             for key in ["user_id", "balance", "currency"]:
                 if key in data:
