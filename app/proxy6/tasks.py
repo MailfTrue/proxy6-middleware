@@ -2,6 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 from app.celery import app
+from app.payments.context import aggregate_write_offs
 from app.proxy6.helpers import send_prolong_error_notification
 from app.proxy6.models import PurchasedProxy
 from app.proxy6.utils import make_user_proxy_descr
@@ -45,18 +46,19 @@ def prolong_user_proxies(user_id):
         .values_list('proxy_id', 'period')
     )
 
-    errors = []
-    for proxy_id, period in prolong_proxies:
-        try:
-            proxy6_client.prolong(
-                user, 
-                ids=proxy_id,
-                period=period,
-            )
-            logger.info(f"Successfully prolonged proxy {proxy_id} for user {user.username}")
-        except Proxy6ClientError as e:
-            logger.error(f"Failed to prolong proxy {proxy_id} for user {user.username}: {e}")
-            errors.append((proxy_id, str(e)))
+    with aggregate_write_offs():
+        errors = []
+        for proxy_id, period in prolong_proxies:
+            try:
+                proxy6_client.prolong(
+                    user, 
+                    ids=proxy_id,
+                    period=period,
+                )
+                logger.info(f"Successfully prolonged proxy {proxy_id} for user {user.username}")
+            except Proxy6ClientError as e:
+                logger.error(f"Failed to prolong proxy {proxy_id} for user {user.username}: {e}")
+                errors.append((proxy_id, str(e)))
 
     if errors:
         send_prolong_error_notification(user, errors)

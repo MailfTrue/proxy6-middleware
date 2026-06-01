@@ -3,6 +3,7 @@ from django.db.models import F
 from django.db import transaction
 import logging
 
+from .context import report_write_off
 from .models import CryptoBotPayment, UserWriteOff
 from ..utils import send_tg_notify
 
@@ -55,12 +56,13 @@ def write_off_user_balance(user, amount, description=None):
 
         logger.info(f"Successfully wrote off {amount} RUB from user {user.id}")
 
-        try:
-            send_tg_notify(
-                f"💰 Списание средств\n"
-                f"Пользователь: {user.username}\n"
-                f"Сумма: {amount} RUB\n"
-                f"Новый баланс: {user.balance} RUB"
-            )
-        except Exception as e:
-            logger.error(f"Failed to send Telegram notification: {e}")
+        if not report_write_off(user, amount, description):
+            try:
+                send_tg_notify(
+                    f"💰 Списание средств\n"
+                    f"Пользователь: {user.username}\n"
+                    f"Сумма: {amount} RUB\n"
+                    f"Новый баланс: {user.balance} RUB"
+                )
+            except Exception as e:
+                logger.error(f"Failed to send Telegram notification: {e}")
